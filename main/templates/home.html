@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Página de Inicio</title>
+</head>
+<body>
+    <h1>Bienvenido al Dashboard de Análisis de Datos de Amazon</h1>
+
+    {% if user %}
+        <p>¡Hola, {{ user.name }}!</p>
+        <p><a href="{% url 'logout' %}">Cerrar sesión</a></p>
+    {% else %}
+        <p>No has iniciado sesión.</p>
+        <p><a href="{% url 'login' %}">Iniciar sesión</a></p>
+    {% endif %}
+
+    <p><a href="{% url 'prueba' %}">Ir a la página de Prueba</a></p>
+</body>
+</html>

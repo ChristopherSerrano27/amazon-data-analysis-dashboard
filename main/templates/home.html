@@ -9,6 +9,11 @@
 
     {% if user %}
         <p>¡Hola, {{ user.name }}!</p>
+        <p>Email: {{ user.email }}</p>
+        <img src="{{ user.picture }}" alt="Foto de Perfil" style="width: 100px; height: 100px;">
+        
+        <p>{{ role_message }}</p>
+        
         <p><a href="{% url 'logout' %}">Cerrar sesión</a></p>
     {% else %}
         <p>No has iniciado sesión.</p>

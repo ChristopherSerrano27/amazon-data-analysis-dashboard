@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard General</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            padding: 20px;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+        .stat-box {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            flex: 1;
+            margin-right: 20px;
+        }
+        .stat-box:last-child {
+            margin-right: 0;
+        }
+        .stat-box h2 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        .chart-container {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .chart-container img {
+            width: 48%;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Estilos para el usuario */
+        .user-info {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            text-align: center;
+        }
+        .user-info img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+        .user-info h3 {
+            margin: 0;
+            font-size: 16px;
+        }
+        .user-info p {
+            margin: 5px 0 0;
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+{% load static %}  <!-- Esta línea carga la etiqueta para archivos estáticos -->
+
+<div class="container">
+    <h1>Dashboard General</h1>
+
+    <!-- Mostrar información del usuario -->
+    <div class="user-info">
+        <img src="{{ user.profile_picture.url }}" alt="Foto de Perfil">
+        <h3>{{ user.username }}</h3>
+        <p>{{ user.role }}</p>
+    </div>
+
+    <div class="stats">
+        <div class="stat-box">
+            <h2>Total de Productos</h2>
+            <p>{{ total_products }}</p>
+        </div>
+        <div class="stat-box">
+            <h2>Distribución de Categorías</h2>
+            <ul>
+                {% for category, count in category_counts.items %}
+                    <li>{{ category }}: {{ count }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="chart-container">
+        <div>
+            <h2>Estadísticas de Precios</h2>
+            <ul>
+                <li>Precio con descuento: Min: {{ price_stats.discount_price.min }}, Max: {{ price_stats.discount_price.max }}</li>
+                <li>Precio real: Min: {{ price_stats.actual_price.min }}, Max: {{ price_stats.actual_price.max }}</li>
+            </ul>
+        </div>
+        <div>
+            <h2>Estadísticas de Calificaciones</h2>
+            <ul>
+                <li>Calificación Promedio: {{ ratings_stats.mean }}</li>
+                <li>Desviación Estándar: {{ ratings_stats.std }}</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="chart-container">
+        <div>
+            <h2>Distribución de Categorías (Gráfico)</h2>
+            <img src="{% static 'general_dashboard.png' %}" alt="Gráfico de Distribución de Categorías">
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

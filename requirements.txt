@@ -1,3 +1,6 @@
 Django
 django-environ
 requests
+pandas
+matplotlib
+seaborn

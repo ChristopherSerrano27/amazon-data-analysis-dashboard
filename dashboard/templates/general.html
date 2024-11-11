@@ -1,129 +1,262 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard General</title>
+    <title>Amazon Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        /* Estilos generales */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
+            background-color: #f4f4f9;
+            display: flex;
         }
+
         .container {
-            padding: 20px;
+            width: 85%;
+            margin-left: 15%;
         }
+
+        /* Estilos para la barra lateral */
+        .sidebar {
+            width: 15%;
+            background-color: #333;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding-top: 20px;
+        }
+
+        .sidebar a {
+            color: white;
+            padding: 10px 15px;
+            text-decoration: none;
+            display: block;
+            margin: 10px 0;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .sidebar a:hover {
+            background-color: #575757;
+        }
+
+        /* Estilos para el área de usuario */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-info img {
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            margin-left: 20px;
+        }
+
+        .user-info div {
+            text-align: right;
+        }
+
+        .user-info h3 {
+            margin: 0;
+            font-size: 1.5em;
+            color: #333;
+        }
+
+        .user-info p {
+            margin: 0;
+            color: #666;
+        }
+
         .stats {
             display: flex;
             justify-content: space-between;
             margin-bottom: 30px;
         }
+
         .stat-box {
             background-color: #fff;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
             flex: 1;
-            margin-right: 20px;
+            margin-right: 10px;
         }
+
         .stat-box:last-child {
             margin-right: 0;
         }
-        .stat-box h2 {
-            font-size: 20px;
-            margin-bottom: 10px;
-        }
+
         .chart-container {
-            margin-top: 30px;
             display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
             justify-content: space-between;
-        }
-        .chart-container img {
-            width: 48%;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
         }
 
-        /* Estilos para el usuario */
-        .user-info {
+        .chart-box {
+            width: 31%;
+            height: 0;
+            padding-bottom: 31%; 
+            position: relative;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-box iframe {
+            width: 100%;
+            height: 100%;
             position: absolute;
-            top: 20px;
-            right: 20px;
-            text-align: center;
+            top: 0;
+            left: 0;
+            border: none;
         }
-        .user-info img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-bottom: 10px;
+
+        /* Estilos para pantallas más pequeñas */
+        @media (max-width: 1024px) {
+            .chart-box {
+                width: 48%;
+                padding-bottom: 48%;
+            }
         }
-        .user-info h3 {
-            margin: 0;
-            font-size: 16px;
+
+        @media (max-width: 768px) {
+            .chart-box {
+                width: 100%; 
+                padding-bottom: 80%;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .container {
+                width: 100%;
+                margin-left: 0;
+            }
         }
-        .user-info p {
-            margin: 5px 0 0;
-            font-size: 14px;
-            color: #666;
+
+        /* Estilo para las secciones */
+        .section {
+            display: none; /* Ocultar todas las secciones por defecto */
+        }
+
+        .section.active {
+            display: block; /* Mostrar solo la sección activa */
         }
     </style>
 </head>
 <body>
 
-{% load static %}  <!-- Esta línea carga la etiqueta para archivos estáticos -->
+<!-- Barra lateral -->
+<div class="sidebar">
+    <a href="#" onclick="showSection('section1')">Sección 1</a>
+    <a href="#" onclick="showSection('section2')">Sección 2</a>
+    <a href="#" onclick="showSection('section3')">Sección 3</a>
+    <a href="#" onclick="showSection('section4')">Sección 4</a>
+    <a href="#" onclick="showSection('section5')">Sección 5</a>
+</div>
 
 <div class="container">
-    <h1>Dashboard General</h1>
+    <!-- Encabezado  -->
+    <div class="header">
+        <h1>Amazon Dashboard</h1>
 
-    <!-- Mostrar información del usuario -->
-    <div class="user-info">
-        <img src="{{ user.profile_picture.url }}" alt="Foto de Perfil">
-        <h3>{{ user.username }}</h3>
-        <p>{{ user.role }}</p>
-    </div>
-
-    <div class="stats">
-        <div class="stat-box">
-            <h2>Total de Productos</h2>
-            <p>{{ total_products }}</p>
-        </div>
-        <div class="stat-box">
-            <h2>Distribución de Categorías</h2>
-            <ul>
-                {% for category, count in category_counts.items %}
-                    <li>{{ category }}: {{ count }}</li>
-                {% endfor %}
-            </ul>
+        <div class="user-info">
+            <div>
+                <h3>{{ username }}</h3>
+                <p>{{ role }}</p>
+            </div>
+            {% if picture %}
+                <img src="{{ picture }}" alt="Foto de Perfil">
+            {% else %}
+                <img src="{% static 'images/default_avatar.png' %}" alt="Avatar">
+            {% endif %}
         </div>
     </div>
 
-    <div class="chart-container">
-        <div>
-            <h2>Estadísticas de Precios</h2>
-            <ul>
-                <li>Precio con descuento: Min: {{ price_stats.discount_price.min }}, Max: {{ price_stats.discount_price.max }}</li>
-                <li>Precio real: Min: {{ price_stats.actual_price.min }}, Max: {{ price_stats.actual_price.max }}</li>
-            </ul>
+    <!-- Sección 1: Estadísticas y gráficos principales -->
+    <div id="section1" class="section active">
+        <div class="stats">
+            <div class="stat-box">
+                <h4>Total de Productos</h4>
+                <p>{{ total_products }}</p>
+            </div>
+            <div class="stat-box">
+                <h4>Categorías</h4>
+                <p>{{ category_counts|length }}</p>
+            </div>
         </div>
-        <div>
-            <h2>Estadísticas de Calificaciones</h2>
-            <ul>
-                <li>Calificación Promedio: {{ ratings_stats.mean }}</li>
-                <li>Desviación Estándar: {{ ratings_stats.std }}</li>
-            </ul>
+
+        <div class="chart-container">
+            <div class="chart-box">
+                {{ fig_category|safe }}
+            </div>
+            <div class="chart-box">
+                {{ fig_ratings|safe }}
+            </div>
+            <div class="chart-box">
+                {{ fig_discount_price|safe }}
+            </div>
         </div>
     </div>
 
-    <div class="chart-container">
-        <div>
-            <h2>Distribución de Categorías (Gráfico)</h2>
-            <img src="{% static 'general_dashboard.png' %}" alt="Gráfico de Distribución de Categorías">
+    <!-- Sección 2 -->
+    <div id="section2" class="section">
+        <div class="chart-container">
+            <div class="chart-box">
+                {{ fig_reviews|safe }}
+            </div>
+            <div class="chart-box">
+                {{ fig_category_avg_price|safe }}
+            </div>
+            <div class="chart-box">
+                {{ fig_category_top_reviews|safe }}
+            </div>
+            <div class="chart-box">
+                {{ fig_category_top_discounts|safe }}
+            </div>
         </div>
+    </div>
+
+    <!-- Sección 3 -->
+    <div id="section3" class="section">
+        <!-- por si ak -->
     </div>
 </div>
+
+<script>
+    function showSection(sectionId) {
+        // Ocultar secciones
+        const sections = document.querySelectorAll('.section');
+        sections.forEach(section => section.classList.remove('active'));
+
+        // Mostrar sección seleccionada
+        const activeSection = document.getElementById(sectionId);
+        activeSection.classList.add('active');
+    }
+</script>
 
 </body>
 </html>

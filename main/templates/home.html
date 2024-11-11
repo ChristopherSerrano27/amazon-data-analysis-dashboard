@@ -1,25 +1,109 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Página de Inicio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenido al Dashboard de Análisis de Datos de Amazon</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Estilo general de la página */
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            color: #333;
+        }
+
+        /* Contenedor de la ventana de bienvenida */
+        .welcome-container {
+            background-color: #fff;
+            padding: 40px 50px;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        /* Título de bienvenida */
+        h1 {
+            font-size: 2.5em;
+            color: #2a9d8f;
+            margin-bottom: 20px;
+        }
+
+        /* Descripción del proyecto */
+        p.description {
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            color: #555;
+        }
+
+        /* Estilos del botón */
+        .btn {
+            background-color: #2a9d8f;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background-color: #21867a;
+        }
+
+        /* Estilo para el enlace de cierre de sesión */
+        .logout {
+            margin-top: 20px;
+            display: inline-block;
+            color: #2a9d8f;
+            font-size: 1em;
+            text-decoration: none;
+        }
+
+        .logout:hover {
+            text-decoration: underline;
+        }
+
+        /* Estilo para imagen de perfil */
+        .profile-img {
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            margin-top: 20px;
+        }
+
+    </style>
 </head>
 <body>
-    <h1>Bienvenido al Dashboard de Análisis de Datos de Amazon</h1>
 
-    {% if user %}
-        <p>¡Hola, {{ user.name }}!</p>
-        <p>Email: {{ user.email }}</p>
-        <img src="{{ user.picture }}" alt="Foto de Perfil" style="width: 100px; height: 100px;">
-        
-        <p>{{ role_message }}</p>
-        
-        <p><a href="{% url 'logout' %}">Cerrar sesión</a></p>
-    {% else %}
-        <p>No has iniciado sesión.</p>
-        <p><a href="{% url 'login' %}">Iniciar sesión</a></p>
-    {% endif %}
+    <div class="welcome-container">
+        <h1>Bienvenido al Dashboard de Análisis de Datos de Amazon</h1>
+        <p class="description">
+            Este proyecto te proporciona herramientas poderosas para analizar los datos de productos, categorías, precios y más dentro del ecosistema de Amazon.
+            ¡Explora las visualizaciones y descubre patrones útiles para tomar decisiones informadas!
+        </p>
 
-    <p><a href="{% url 'prueba' %}">Ir a la página de Prueba</a></p>
+        {% if user %}
+            <p>¡Hola, {{ user.name }}!</p>
+            <img src="{{ user.picture }}" alt="Foto de Perfil" class="profile-img">
+            <p>{{ role_message }}</p>
+            <a href="{% url 'logout' %}" class="logout">Cerrar sesión</a>
+            <a href="{% url 'general_dashboard' %}" class="btn">Ir al Dashboard</a>
+        {% else %}
+            <p>No has iniciado sesión.</p>
+            <a href="{% url 'login' %}" class="btn">Iniciar sesión</a>
+        {% endif %}
+    </div>
+
 </body>
 </html>

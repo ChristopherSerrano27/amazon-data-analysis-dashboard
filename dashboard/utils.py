@@ -13,6 +13,9 @@ def import_and_clean_data(data_folder='./dataset'):
     """
     dataframes = []
     
+    # Tasa de conversión de Rupias a Dólares (1 INR = 0.012 USD, por ejemplo)
+    inr_to_usd = 0.012
+
     for file in os.listdir(data_folder):
         if file.endswith('.csv'):
             file_path = os.path.join(data_folder, file)
@@ -41,14 +44,18 @@ def import_and_clean_data(data_folder='./dataset'):
     df['discount_price'] = pd.to_numeric(df['discount_price'], errors='coerce')
     df['actual_price'] = pd.to_numeric(df['actual_price'], errors='coerce')
 
-    # Filtrar valores válidos para precios y cantidad de reseñas
-    max_discount_price = 10000
-    max_actual_price = 10000
-    max_no_of_ratings = 1200
+    # Convertir los precios de Rupias a Dólares
+    df['discount_price'] = df['discount_price'] * inr_to_usd
+    df['actual_price'] = df['actual_price'] * inr_to_usd
 
-    df_clean = df[
-        (df['discount_price'] <= max_discount_price) &
-        (df['actual_price'] <= max_actual_price) &
+    # Filtrar valores válidos para precios y cantidad de reseñas
+    max_discount_price = 300
+    max_actual_price = 1000
+    max_no_of_ratings = 1500
+
+    df_clean = df[ 
+        (df['discount_price'] <= max_discount_price) & 
+        (df['actual_price'] <= max_actual_price) & 
         (df['no_of_ratings'] <= max_no_of_ratings)
     ]
     

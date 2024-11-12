@@ -288,15 +288,43 @@
             <div class="chart-box">
                 {{ fig_discount_price|safe }}
             </div>
-        </div>
-    </div>
-
-    <!-- Sección 2: Categorías y reseñas -->
-    <div id="section2" class="section">
-        <div class="chart-container">
             <div class="chart-box">
                 {{ fig_reviews|safe }}
             </div>
+        </div>
+    </div>
+
+    <!-- Sección 2: Categorías -->
+    <div id="section2" class="section">
+        <div class="stats">
+            <!-- Indicadores adicionales -->
+            <div class="stat-box">
+                <h4>Categoría Más Rentable</h4>
+                <p>{{ categoria_mas_rentable }}</p>
+            </div>
+            <div class="stat-box">
+                <h4>Categoría Menos Rentable</h4>
+                <p>{{ categoria_menos_rentable }}</p>
+            </div>
+            <div class="stat-box">
+                <h4>Categoría con Más Objetos</h4>
+                <p>{{ categoria_mas_objetos }}</p>
+            </div>
+            <div class="stat-box">
+                <h4>Categoría con Menos Objetos</h4>
+                <p>{{ categoria_menos_objetos }}</p>
+            </div>
+            <div class="stat-box">
+                <h4>Categorías con Mejor Rating</h4>
+                <p>{{ categorias_mejor_rateadas }}</p>
+            </div>
+            <div class="stat-box">
+                <h4>Categorías con Peor Rating</h4>
+                <p>{{ categorias_peor_rateadas }}</p>
+            </div>
+        </div>
+
+        <div class="chart-container">
             <div class="chart-box">
                 {{ fig_category_avg_price|safe }}
             </div>
@@ -309,31 +337,79 @@
         </div>
     </div>
 
-    <!-- Sección 3: Productos -->
+
+    <!-- Sección de Productos Más Rentables -->
     <div id="section3" class="section">
-        <h2>Mejores Productos</h2>
+        <h2>Productos Más Rentables</h2>
+
+        <!-- Statboxes para la rentabilidad -->
+        <div class="stats">
+            <div class="stat-box">
+                <h4>Rentabilidad Estimada (%)</h4>
+                <p>{{ rentabilidad_total_percent|floatformat:2 }}%</p>
+            </div>
+            <div class="stat-box">
+                <h4>Rentabilidad Estimada ($)</h4>
+                <p>${{ rentabilidad_total_usd|floatformat:2 }}</p>
+            </div>
+        </div>
+
+        <div class="product-list">
+            {% for product in profitability_products %}
+            <div class="product-card">
+                <img src="{{ product.image }}" alt="{{ product.name }}" class="product-image">
+                <div class="product-info">
+                    <h3>{{ product.name }}</h3>
+                    <p><strong>Categoría:</strong> {{ product.main_category }}</p>
+                    <p><strong>Calificación:</strong> {{ product.ratings }} estrellas</p>
+                    <p><strong>Reseñas:</strong> {{ product.no_of_ratings }}</p>
+                    <p><strong>Precio con descuento:</strong> ${{ product.discount_price }}</p>
+                    <p><strong>Precio original:</strong> ${{ product.actual_price }}</p>
+                    <p><a href="{{ product.link }}" target="_blank">Ver producto</a></p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Sección de Mejores Productos -->
+    <div id="section4" class="section">
+        <h2>Mejores Productos (Mejor Calificación / Buenos Descuentos)</h2>
         <div class="product-list">
             {% for product in best_products %}
             <div class="product-card">
                 <img src="{{ product.image }}" alt="{{ product.name }}" class="product-image">
                 <div class="product-info">
-                    <h3>{{ product.name }}</h3> <!-- Nombre del producto en la parte superior -->
+                    <h3>{{ product.name }}</h3>
                     <p><strong>Categoría:</strong> {{ product.main_category }}</p>
                     <p><strong>Calificación:</strong> {{ product.ratings }} estrellas</p>
-                    <p><strong>Reseñas:</strong> {{ product.no_of_ratings }} reseñas</p>
-                    <p><strong>Precio Original:</strong> ${{ product.actual_price }}</p>
-                    <p><strong>Precio con Descuento:</strong> ${{ product.discount_price }}</p>
-                    <p><strong>Enlace al Producto:</strong> <a href="{{ product.link }}" target="_blank">Ver en Amazon</a></p> <!-- Enlace a Amazon -->
+                    <p><strong>Reseñas:</strong> {{ product.no_of_ratings }}</p>
+                    <p><strong>Precio normal:</strong> ${{ product.actual_price|floatformat:2 }}</p>
+                    <p><strong>Precio con descuento:</strong> ${{ product.discount_price|floatformat:2 }}</p>
+                    <p><a href="{{ product.link }}" target="_blank">Ver producto</a></p>
                 </div>
             </div>
             {% endfor %}
         </div>
-        
-    </div>
 
-    <!-- Sección 4: Reseñas -->
-    <div id="section4" class="section">
-        <!-- Aquí puedes agregar los gráficos de reseñas -->
+        <!-- Sección de Peores Productos -->
+        <h2>Peores Productos (Peor Calificación / Descuentos bajos)</h2>
+        <div class="product-list"> <!-- Cambié la clase a product-list para que sea igual -->
+            {% for product in worst_products_data %}
+            <div class="product-card"> <!-- Usamos la misma clase 'product-card' -->
+                <img src="{{ product.image }}" alt="{{ product.name }}" class="product-image">
+                <div class="product-info">
+                    <h3>{{ product.name }}</h3>
+                    <p><strong>Categoría:</strong> {{ product.main_category }}</p>
+                    <p><strong>Calificación:</strong> {{ product.ratings }} estrellas</p>
+                    <p><strong>Reseñas:</strong> {{ product.no_of_ratings }}</p>
+                    <p><strong>Precio normal:</strong> ${{ product.actual_price|floatformat:2 }}</p>
+                    <p><strong>Precio con descuento:</strong> ${{ product.discount_price|floatformat:2 }}</p> 
+                    <p><a href="{{ product.link }}" target="_blank">Ver producto</a></p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
     </div>
 
     <!-- Sección 5: Pronósticos -->

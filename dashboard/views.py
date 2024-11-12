@@ -4,6 +4,15 @@ from main.views import auth0_login_required
 from .utils import import_and_clean_data
 from django.http import JsonResponse
 from main.views import get_user_roles
+import requests
+
+# Función para verificar si la URL de la imagen es válida
+def is_image_valid(url):
+    try:
+        response = requests.head(url, allow_redirects=True)
+        return response.status_code == 200  # Si el código de estado es 200, la imagen es válida
+    except requests.exceptions.RequestException:
+        return False  # En caso de error, la URL no es válida
 
 @auth0_login_required
 def general_dashboard(request):
@@ -32,6 +41,23 @@ def general_dashboard(request):
 
     category_avg_price = df_clean.groupby('main_category')['actual_price'].mean().reset_index()
     fig_category_avg_price = px.bar(category_avg_price, x='main_category', y='actual_price', title='Precio Promedio por Categoría')
+
+    # Filtrar los mejores productos con más de 500 o 750 reseñas, mejor rating y rebajas
+    top_products = df_clean[df_clean['no_of_ratings'] >= 500]
+    top_products = top_products.sort_values(by=['ratings', 'discount_price'], ascending=[False, False])
+
+    # Eliminar productos duplicados por nombre
+    top_products = top_products.drop_duplicates(subset=['name']).head(10)  # Limitar a los 10 mejores productos
+
+    # Preparar datos para la sección de "Mejores Productos"
+    best_products = top_products[['name', 'main_category', 'ratings', 'discount_price', 'actual_price', 'no_of_ratings', 'image', 'link']].to_dict(orient='records')
+
+    # Validar imágenes de los productos y asignar imagen predeterminada si es necesario
+    for product in best_products:
+        image_url = product.get('image', '')  # Obtener la URL de la imagen
+        if not image_url or not is_image_valid(image_url):
+            # Si la URL de la imagen no es válida, asigna una imagen predeterminada
+            product['image'] = 'https://media.istockphoto.com/id/1354776457/vector/default-image-icon-vector-missing-picture-page-for-website-design-or-mobile-app-no-photo.jpg?s=612x612&w=0&k=20&c=w3OW0wX3LyiFRuDHo9A32Q0IUMtD4yjXEvQlqyYk9O4='
 
     # Aplicar ajustes de tamaño y márgenes para evitar el desbordamiento
     def adjust_figure(fig):
@@ -75,4 +101,5 @@ def general_dashboard(request):
         'fig_category_avg_price': fig_category_avg_price.to_html(full_html=False),
         'fig_category_top_reviews': fig_category_top_reviews.to_html(full_html=False),
         'fig_category_top_discounts': fig_category_top_discounts.to_html(full_html=False),
+        'best_products': best_products
     })

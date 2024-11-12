@@ -184,6 +184,54 @@
         .section.active {
             display: block;
         }
+
+        /* Estilos para la sección de productos */
+        .product-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: space-between;
+        }
+
+        .product-card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 30%;
+            padding: 10px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .product-card:hover {
+            transform: scale(1.05);
+        }
+
+        .product-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .product-info {
+            margin-top: 10px;
+        }
+
+        .product-info h3 {
+            font-size: 1.2em;
+            color: #333;
+        }
+
+        .product-info p {
+            font-size: 1em;
+            color: #555;
+        }
+
+        @media (max-width: 768px) {
+            .product-card {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -263,17 +311,34 @@
 
     <!-- Sección 3: Productos -->
     <div id="section3" class="section">
-        <!-- falta -->
+        <h2>Mejores Productos</h2>
+        <div class="product-list">
+            {% for product in best_products %}
+            <div class="product-card">
+                <img src="{{ product.image }}" alt="{{ product.name }}" class="product-image">
+                <div class="product-info">
+                    <h3>{{ product.name }}</h3> <!-- Nombre del producto en la parte superior -->
+                    <p><strong>Categoría:</strong> {{ product.main_category }}</p>
+                    <p><strong>Calificación:</strong> {{ product.ratings }} estrellas</p>
+                    <p><strong>Reseñas:</strong> {{ product.no_of_ratings }} reseñas</p>
+                    <p><strong>Precio Original:</strong> ${{ product.actual_price }}</p>
+                    <p><strong>Precio con Descuento:</strong> ${{ product.discount_price }}</p>
+                    <p><strong>Enlace al Producto:</strong> <a href="{{ product.link }}" target="_blank">Ver en Amazon</a></p> <!-- Enlace a Amazon -->
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
     </div>
 
     <!-- Sección 4: Reseñas -->
     <div id="section4" class="section">
-        <!-- falta -->
+        <!-- Aquí puedes agregar los gráficos de reseñas -->
     </div>
 
     <!-- Sección 5: Pronósticos -->
     <div id="section5" class="section">
-        <!-- falta -->
+        <!-- Aquí puedes agregar los gráficos de pronósticos -->
     </div>
 </div>
 
@@ -281,15 +346,13 @@
     function showSection(sectionId) {
         const sections = document.querySelectorAll('.section');
         sections.forEach(section => section.classList.remove('active'));
-
-        const activeSection = document.getElementById(sectionId);
-        activeSection.classList.add('active');
+        document.getElementById(sectionId).classList.add('active');
     }
 
-    function setActiveLink(linkElement) {
+    function setActiveLink(link) {
         const links = document.querySelectorAll('.sidebar a');
         links.forEach(link => link.classList.remove('active'));
-        linkElement.classList.add('active');
+        link.classList.add('active');
     }
 </script>
 

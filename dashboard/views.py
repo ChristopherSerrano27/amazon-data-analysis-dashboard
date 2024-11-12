@@ -3,7 +3,7 @@ from django.shortcuts import render
 from main.views import auth0_login_required
 from .utils import import_and_clean_data
 from django.http import JsonResponse
-from main.views import get_user_roles  
+from main.views import get_user_roles
 
 @auth0_login_required
 def general_dashboard(request):
@@ -32,6 +32,26 @@ def general_dashboard(request):
 
     category_avg_price = df_clean.groupby('main_category')['actual_price'].mean().reset_index()
     fig_category_avg_price = px.bar(category_avg_price, x='main_category', y='actual_price', title='Precio Promedio por Categoría')
+
+    # Aplicar ajustes de tamaño y márgenes para evitar el desbordamiento
+    def adjust_figure(fig):
+        fig.update_layout(
+            margin=dict(l=10, r=10, t=150, b=10),
+            autosize=True, 
+            height=400, 
+            width=500,
+            title_x=0.5,  
+        )
+        return fig
+
+    # Ajustar todos los gráficos
+    fig_category = adjust_figure(fig_category)
+    fig_ratings = adjust_figure(fig_ratings)
+    fig_discount_price = adjust_figure(fig_discount_price)
+    fig_reviews = adjust_figure(fig_reviews)
+    fig_category_top_reviews = adjust_figure(fig_category_top_reviews)
+    fig_category_top_discounts = adjust_figure(fig_category_top_discounts)
+    fig_category_avg_price = adjust_figure(fig_category_avg_price)
 
     # Obtener la información del usuario de la sesión
     user_data = request.session.get('user', {})

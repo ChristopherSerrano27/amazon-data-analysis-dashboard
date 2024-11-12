@@ -56,7 +56,7 @@
         }
 
         .sidebar a.logout {
-            margin-top: auto;
+            margin-top: 600px;
             background-color: #ff4d4d;
             text-align: center;
         }
@@ -136,17 +136,21 @@
             background-color: #fff;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
         }
 
-        .chart-box iframe {
-            width: 100%;
-            height: 100%;
+        .chart-box img, 
+        .chart-box iframe, 
+        .chart-box .chart-content {
             position: absolute;
             top: 0;
             left: 0;
-            border: none;
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Ajusta el contenido para que no se desborde */
         }
 
+        /* Ajustes responsivos adicionales */
         @media (max-width: 1024px) {
             .chart-box {
                 width: 48%;
@@ -190,7 +194,7 @@
     <a href="#" onclick="showSection('section2'); setActiveLink(this)">Categorías</a>
     <a href="#" onclick="showSection('section3'); setActiveLink(this)">Productos</a>
     <a href="#" onclick="showSection('section4'); setActiveLink(this)">Reseñas</a>
-    <a href="#" onclick="showSection('section5'); setActiveLink(this)">Pronosticos</a>
+    <a href="#" onclick="showSection('section5'); setActiveLink(this)">Pronósticos</a>
     <a href="{% url 'logout' %}" class="logout">
         <i class="fas fa-sign-out-alt"></i> Cerrar sesión
     </a>
@@ -259,17 +263,17 @@
 
     <!-- Sección 3: Productos -->
     <div id="section3" class="section">
-        <!-- Puedes agregar gráficas relacionadas con productos aquí si las tienes -->
+        <!-- falta -->
     </div>
 
     <!-- Sección 4: Reseñas -->
     <div id="section4" class="section">
-        <!-- Puedes agregar gráficas relacionadas con reseñas aquí si las tienes -->
+        <!-- falta -->
     </div>
 
     <!-- Sección 5: Pronósticos -->
     <div id="section5" class="section">
-        <!-- Actualmente no hay gráficas para esta sección -->
+        <!-- falta -->
     </div>
 </div>
 

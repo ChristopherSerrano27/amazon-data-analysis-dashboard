@@ -13,11 +13,15 @@
             margin: 0;
             background-color: #f4f4f9;
             display: flex;
+            flex-wrap: wrap;
         }
 
         .container {
             width: 85%;
             margin-left: 15%;
+            padding-top: 20px;
+            display: flex;
+            flex-direction: column;
         }
 
         /* Estilos para la barra lateral */
@@ -29,6 +33,8 @@
             top: 0;
             left: 0;
             padding-top: 20px;
+            display: flex;
+            flex-direction: column;
         }
 
         .sidebar a {
@@ -36,7 +42,7 @@
             padding: 10px 15px;
             text-decoration: none;
             display: block;
-            margin: 10px 0;
+            margin: 5px 0;
             border-radius: 5px;
             transition: background-color 0.3s ease;
         }
@@ -45,14 +51,24 @@
             background-color: #575757;
         }
 
-        /* Estilos para el área de usuario */
+        .sidebar a.active {
+            background-color: #555;
+        }
+
+        .sidebar a.logout {
+            margin-top: auto;
+            background-color: #ff4d4d;
+            text-align: center;
+        }
+
+        /* Estilo para la barra de encabezado */
         .header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 30px;
+            margin-bottom: 10px;
             background-color: #fff;
-            padding: 20px;
+            padding: 15px 20px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
@@ -64,8 +80,8 @@
 
         .user-info img {
             border-radius: 50%;
-            width: 80px;
-            height: 80px;
+            width: 60px;
+            height: 60px;
             margin-left: 20px;
         }
 
@@ -87,12 +103,12 @@
         .stats {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
         .stat-box {
             background-color: #fff;
-            padding: 20px;
+            padding: 15px;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             text-align: center;
@@ -107,15 +123,15 @@
         .chart-container {
             display: flex;
             flex-wrap: wrap;
-            gap: 20px;
+            gap: 15px;
             justify-content: space-between;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
         .chart-box {
             width: 31%;
             height: 0;
-            padding-bottom: 31%; 
+            padding-bottom: 31%;
             position: relative;
             background-color: #fff;
             border-radius: 10px;
@@ -131,7 +147,6 @@
             border: none;
         }
 
-        /* Estilos para pantallas más pequeñas */
         @media (max-width: 1024px) {
             .chart-box {
                 width: 48%;
@@ -141,7 +156,7 @@
 
         @media (max-width: 768px) {
             .chart-box {
-                width: 100%; 
+                width: 100%;
                 padding-bottom: 80%;
             }
 
@@ -157,13 +172,13 @@
             }
         }
 
-        /* Estilo para las secciones */
         .section {
-            display: none; /* Ocultar todas las secciones por defecto */
+            display: none;
+            margin-bottom: 10px;
         }
 
         .section.active {
-            display: block; /* Mostrar solo la sección activa */
+            display: block;
         }
     </style>
 </head>
@@ -171,18 +186,20 @@
 
 <!-- Barra lateral -->
 <div class="sidebar">
-    <a href="#" onclick="showSection('section1')">Sección 1</a>
-    <a href="#" onclick="showSection('section2')">Sección 2</a>
-    <a href="#" onclick="showSection('section3')">Sección 3</a>
-    <a href="#" onclick="showSection('section4')">Sección 4</a>
-    <a href="#" onclick="showSection('section5')">Sección 5</a>
+    <a href="#" onclick="showSection('section1'); setActiveLink(this)">General</a>
+    <a href="#" onclick="showSection('section2'); setActiveLink(this)">Categorías</a>
+    <a href="#" onclick="showSection('section3'); setActiveLink(this)">Productos</a>
+    <a href="#" onclick="showSection('section4'); setActiveLink(this)">Reseñas</a>
+    <a href="#" onclick="showSection('section5'); setActiveLink(this)">Pronosticos</a>
+    <a href="{% url 'logout' %}" class="logout">
+        <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+    </a>
 </div>
 
 <div class="container">
-    <!-- Encabezado  -->
+    <!-- Encabezado -->
     <div class="header">
         <h1>Amazon Dashboard</h1>
-
         <div class="user-info">
             <div>
                 <h3>{{ username }}</h3>
@@ -222,7 +239,7 @@
         </div>
     </div>
 
-    <!-- Sección 2 -->
+    <!-- Sección 2: Categorías y reseñas -->
     <div id="section2" class="section">
         <div class="chart-container">
             <div class="chart-box">
@@ -240,21 +257,35 @@
         </div>
     </div>
 
-    <!-- Sección 3 -->
+    <!-- Sección 3: Productos -->
     <div id="section3" class="section">
-        <!-- por si ak -->
+        <!-- Puedes agregar gráficas relacionadas con productos aquí si las tienes -->
+    </div>
+
+    <!-- Sección 4: Reseñas -->
+    <div id="section4" class="section">
+        <!-- Puedes agregar gráficas relacionadas con reseñas aquí si las tienes -->
+    </div>
+
+    <!-- Sección 5: Pronósticos -->
+    <div id="section5" class="section">
+        <!-- Actualmente no hay gráficas para esta sección -->
     </div>
 </div>
 
 <script>
     function showSection(sectionId) {
-        // Ocultar secciones
         const sections = document.querySelectorAll('.section');
         sections.forEach(section => section.classList.remove('active'));
 
-        // Mostrar sección seleccionada
         const activeSection = document.getElementById(sectionId);
         activeSection.classList.add('active');
+    }
+
+    function setActiveLink(linkElement) {
+        const links = document.querySelectorAll('.sidebar a');
+        links.forEach(link => link.classList.remove('active'));
+        linkElement.classList.add('active');
     }
 </script>
 

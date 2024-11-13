@@ -6,233 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Amazon Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        /* Estilos generales */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            background-color: #f4f4f9;
-            display: flex;
-            flex-wrap: wrap;
-        }
-
-        .container {
-            width: 85%;
-            margin-left: 15%;
-            padding-top: 20px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Estilos para la barra lateral */
-        .sidebar {
-            width: 15%;
-            background-color: #333;
-            height: 100vh;
-            position: fixed;
-            top: 0;
-            left: 0;
-            padding-top: 20px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .sidebar a {
-            color: white;
-            padding: 10px 15px;
-            text-decoration: none;
-            display: block;
-            margin: 5px 0;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-        }
-
-        .sidebar a:hover {
-            background-color: #575757;
-        }
-
-        .sidebar a.active {
-            background-color: #555;
-        }
-
-        .sidebar a.logout {
-            margin-top: 600px;
-            background-color: #ff4d4d;
-            text-align: center;
-        }
-
-        /* Estilo para la barra de encabezado */
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            background-color: #fff;
-            padding: 15px 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-        }
-
-        .user-info img {
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            margin-left: 20px;
-        }
-
-        .user-info div {
-            text-align: right;
-        }
-
-        .user-info h3 {
-            margin: 0;
-            font-size: 1.5em;
-            color: #333;
-        }
-
-        .user-info p {
-            margin: 0;
-            color: #666;
-        }
-
-        .stats {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-
-        .stat-box {
-            background-color: #fff;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            flex: 1;
-            margin-right: 10px;
-        }
-
-        .stat-box:last-child {
-            margin-right: 0;
-        }
-
-        .chart-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-
-        .chart-box {
-            width: 31%;
-            height: 0;
-            padding-bottom: 31%;
-            position: relative;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-
-        .chart-box img, 
-        .chart-box iframe, 
-        .chart-box .chart-content {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: contain; /* Ajusta el contenido para que no se desborde */
-        }
-
-        /* Ajustes responsivos adicionales */
-        @media (max-width: 1024px) {
-            .chart-box {
-                width: 48%;
-                padding-bottom: 48%;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .chart-box {
-                width: 100%;
-                padding-bottom: 80%;
-            }
-
-            .sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-            }
-
-            .container {
-                width: 100%;
-                margin-left: 0;
-            }
-        }
-
-        .section {
-            display: none;
-            margin-bottom: 10px;
-        }
-
-        .section.active {
-            display: block;
-        }
-
-        /* Estilos para la sección de productos */
-        .product-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            justify-content: space-between;
-        }
-
-        .product-card {
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            width: 30%;
-            padding: 10px;
-            text-align: center;
-            transition: transform 0.3s;
-        }
-
-        .product-card:hover {
-            transform: scale(1.05);
-        }
-
-        .product-image {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-        }
-
-        .product-info {
-            margin-top: 10px;
-        }
-
-        .product-info h3 {
-            font-size: 1.2em;
-            color: #333;
-        }
-
-        .product-info p {
-            font-size: 1em;
-            color: #555;
-        }
-
-        @media (max-width: 768px) {
-            .product-card {
-                width: 100%;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
 </head>
 <body>
 
@@ -337,7 +111,6 @@
         </div>
     </div>
 
-
     <!-- Sección de Productos Más Rentables -->
     <div id="section3" class="section">
         <h2>Productos Más Rentables</h2>
@@ -396,7 +169,7 @@
         <h2>Peores Productos (Peor Calificación / Descuentos bajos)</h2>
         <div class="product-list"> <!-- Cambié la clase a product-list para que sea igual -->
             {% for product in worst_products_data %}
-            <div class="product-card"> <!-- Usamos la misma clase 'product-card' -->
+            <div class="product-card">
                 <img src="{{ product.image }}" alt="{{ product.name }}" class="product-image">
                 <div class="product-info">
                     <h3>{{ product.name }}</h3>
@@ -404,31 +177,35 @@
                     <p><strong>Calificación:</strong> {{ product.ratings }} estrellas</p>
                     <p><strong>Reseñas:</strong> {{ product.no_of_ratings }}</p>
                     <p><strong>Precio normal:</strong> ${{ product.actual_price|floatformat:2 }}</p>
-                    <p><strong>Precio con descuento:</strong> ${{ product.discount_price|floatformat:2 }}</p> 
+                    <p><strong>Precio con descuento:</strong> ${{ product.discount_price|floatformat:2 }}</p>
                     <p><a href="{{ product.link }}" target="_blank">Ver producto</a></p>
                 </div>
             </div>
             {% endfor %}
         </div>
     </div>
-
-    <!-- Sección 5: Pronósticos -->
-    <div id="section5" class="section">
-        <!-- Aquí puedes agregar los gráficos de pronósticos -->
-    </div>
 </div>
 
 <script>
+    // Funciones para mostrar y ocultar secciones
     function showSection(sectionId) {
         const sections = document.querySelectorAll('.section');
-        sections.forEach(section => section.classList.remove('active'));
-        document.getElementById(sectionId).classList.add('active');
+        sections.forEach(section => {
+            section.classList.remove('active');
+        });
+
+        const sectionToShow = document.getElementById(sectionId);
+        sectionToShow.classList.add('active');
     }
 
-    function setActiveLink(link) {
+    // Función para activar el enlace de la barra lateral
+    function setActiveLink(linkElement) {
         const links = document.querySelectorAll('.sidebar a');
-        links.forEach(link => link.classList.remove('active'));
-        link.classList.add('active');
+        links.forEach(link => {
+            link.classList.remove('active');
+        });
+
+        linkElement.classList.add('active');
     }
 </script>
 

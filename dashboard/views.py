@@ -6,6 +6,7 @@ from .utils import import_and_clean_data
 from django.http import JsonResponse
 from main.views import get_user_roles
 import requests
+import numpy as np  # Asegúrate de importar numpy para calcular la mediana
 
 # Función para verificar si la URL de la imagen es válida
 def is_image_valid(url):
@@ -110,6 +111,24 @@ def general_dashboard(request):
     # Categorías peor rateadas (promedio de ratings)
     categorias_peor_rateadas = df_clean.groupby('main_category')['ratings'].mean().idxmin()
 
+    # Cálculos para media y mediana de reseñas, precios y descuentos
+    avg_reviews = df_clean['ratings'].mean()
+    median_reviews = np.median(df_clean['ratings']) 
+
+    avg_price = df_clean['actual_price'].mean()
+    median_price = np.median(df_clean['actual_price'])
+
+    # Calcular el porcentaje de descuento para cada producto
+    df_clean['discount_percentage'] = ((df_clean['actual_price'] - df_clean['discount_price']) / df_clean['actual_price']) * 100
+
+    # Calcular el promedio y la mediana del porcentaje de descuento
+    avg_discount = round(df_clean['discount_percentage'].mean(), 2)
+    median_discount = round(np.median(df_clean['discount_percentage']), 2)
+
+    total_products = len(df_clean)
+    products_with_active_discount = df_clean[df_clean['discount_price'] < df_clean['actual_price']]
+    discount_percentage = round((len(products_with_active_discount) / total_products) * 100, 2)
+
     # Ajustar todos los gráficos
     def adjust_figure(fig):
         fig.update_layout(
@@ -140,10 +159,10 @@ def general_dashboard(request):
     rentabilidad_total_usd = df_clean['profitability_usd'].sum()
     rentabilidad_total_percent = df_clean['profitability_percent'].mean()  # Rentabilidad en %
 
+    satisfaction_index = df_clean['ratings'].mean() * 20
+
+    # Pasar los cálculos y gráficos a la plantilla
     return render(request, 'general.html', {
-        'username': username,
-        'role': role,
-        'picture': picture,
         'total_products': total_products,
         'category_counts': category_counts.to_dict(orient='records'),
         'fig_category': fig_category.to_html(full_html=False),
@@ -164,4 +183,15 @@ def general_dashboard(request):
         'categorias_peor_rateadas': categorias_peor_rateadas,
         'rentabilidad_total_usd': rentabilidad_total_usd,
         'rentabilidad_total_percent': rentabilidad_total_percent,
+        'avg_reviews': avg_reviews,
+        'median_reviews': median_reviews,
+        'avg_price': avg_price,
+        'median_price': median_price,
+        'avg_discount': avg_discount,
+        'median_discount': median_discount,
+        'username': username,
+        'role': role,
+        'picture': picture,
+        'satisfaction_index': satisfaction_index,
+        'discount_percentage': discount_percentage, 
     })

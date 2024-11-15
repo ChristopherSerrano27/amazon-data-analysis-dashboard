@@ -8,6 +8,7 @@ from main.views import get_user_roles
 import requests
 import numpy as np
 import plotly.graph_objects as go
+import pandas as pd
 
 # Función para verificar si la URL de la imagen es válida
 def is_image_valid(url):
@@ -194,6 +195,81 @@ def general_dashboard(request):
     # Calcular la probabilidad de devolución
     p_devolucion_total = p_compra * p_insatisfaccion * p_devolucion * 100  # Multiplicamos por 100 para expresarlo en porcentaje
 
+    # Sección 5 - Pronósticos para 2024
+
+    # Cálculo del precio promedio con descuento y precio actual para 2023
+    avg_discount_price = df_clean['discount_price'].mean()
+    avg_actual_price = df_clean['actual_price'].mean()
+
+    # Factor de crecimiento (suponiendo un 5% de aumento para el próximo año)
+    growth_factor = 1.05
+
+    # Predicción de los precios para 2024 aplicando el factor de crecimiento
+    predicted_discount_price = avg_discount_price * growth_factor
+    predicted_actual_price = avg_actual_price * growth_factor
+
+    # Cálculo de la calificación promedio ponderada para 2023
+    df_clean['weighted_ratings'] = df_clean['ratings'] * df_clean['no_of_ratings']
+    total_ratings = df_clean['no_of_ratings'].sum()
+    total_weighted_ratings = df_clean['weighted_ratings'].sum()
+
+    # Predicción de la calificación promedio para 2024 basada en el promedio ponderado
+    predicted_avg_rating = total_weighted_ratings / total_ratings
+
+    # Cálculo del margen de beneficio para cada producto
+    df_clean['profit_margin'] = df_clean['actual_price'] - df_clean['discount_price']
+    # Producto más rentable para 2023
+    most_profitable_product = df_clean.loc[df_clean['profit_margin'].idxmax()]
+
+    # Cálculo de la demanda ponderada para cada producto
+    df_clean['demand_score'] = df_clean['ratings'] * df_clean['no_of_ratings']
+    # Producto con mayor demanda
+    highest_demand_product = df_clean.loc[df_clean['demand_score'].idxmax()]
+
+    # Filtrar productos con más de 500 reseñas
+    df_filtered = df_clean[df_clean['no_of_ratings'] > 500]
+
+    # Obtener los productos más rentables para 2024 (suponiendo top 3 productos rentables) de los productos filtrados
+    most_profitable_products = df_filtered.nlargest(3, 'profit_margin')[['name', 'main_category', 'ratings', 'no_of_ratings', 'discount_price', 'actual_price', 'image', 'link']]
+
+    # Asegurarse de que los productos con mayor demanda no se repitan en los productos más rentables
+    highest_demand_products = df_filtered.loc[~df_filtered['name'].isin(most_profitable_products['name'])] \
+                                        .nlargest(3, 'demand_score')[['name', 'main_category', 'ratings', 'no_of_ratings', 'discount_price', 'actual_price', 'image', 'link']]
+
+    # Si aún hay productos duplicados, los eliminamos y tomamos el siguiente producto
+    remaining_products = df_filtered.loc[~df_filtered['name'].isin(most_profitable_products['name']) & ~df_filtered['name'].isin(highest_demand_products['name'])]
+
+    # Añadir productos adicionales si no alcanzamos 3 en alguna lista (solo si es necesario)
+    if len(most_profitable_products) < 3:
+        remaining_profitable = remaining_products.nlargest(3 - len(most_profitable_products), 'profit_margin')
+        most_profitable_products = pd.concat([most_profitable_products, remaining_profitable[['name', 'main_category', 'ratings', 'no_of_ratings', 'discount_price', 'actual_price', 'image', 'link']]])
+
+    if len(highest_demand_products) < 3:
+        remaining_demand = remaining_products.nlargest(3 - len(highest_demand_products), 'demand_score')
+        highest_demand_products = pd.concat([highest_demand_products, remaining_demand[['name', 'main_category', 'ratings', 'no_of_ratings', 'discount_price', 'actual_price', 'image', 'link']]])
+
+    # Evitar duplicados en ambas listas y asegurar que ambas tengan 3 productos
+    final_most_profitable = pd.concat([most_profitable_products, remaining_products])\
+                                .drop_duplicates(subset=['name'])\
+                                .nlargest(3, 'profit_margin')
+
+    final_highest_demand = pd.concat([highest_demand_products, remaining_products])\
+                                .drop_duplicates(subset=['name'])\
+                                .nlargest(3, 'demand_score')
+
+    # Mostrar los resultados finales
+    most_profitable_products = final_most_profitable.head(3)
+    highest_demand_products = final_highest_demand.head(3)
+    
+    for product in most_profitable_products.itertuples():
+        image_url = product.image
+        if not image_url or not is_image_valid(image_url):
+            most_profitable_products.at[product.Index, 'image'] = 'https://media.istockphoto.com/id/1354776457/vector/default-image-icon-vector-missing-picture-page-for-website-design-or-mobile-app-no-photo.jpg?s=612x612&w=0&k=20&c=w3OW0wX3LyiFRuDHo9A32Q0IUMtD4yjXEvQlqyYk9O4='
+
+    for product in highest_demand_products.itertuples():
+        image_url = product.image
+        if not image_url or not is_image_valid(image_url):
+            highest_demand_products.at[product.Index, 'image'] = 'https://media.istockphoto.com/id/1354776457/vector/default-image-icon-vector-missing-picture-page-for-website-design-or-mobile-app-no-photo.jpg?s=612x612&w=0&k=20&c=w3OW0wX3LyiFRuDHo9A32Q0IUMtD4yjXEvQlqyYk9O4='
 
     # Pasar los cálculos y gráficos a la plantilla
     return render(request, 'general.html', {
@@ -232,4 +308,13 @@ def general_dashboard(request):
         'discount_percentage': discount_percentage,
         'total_reviews': total_reviews,
         'p_devolucion_total': p_devolucion_total,
+        'predicted_discount_price': predicted_discount_price,
+        'predicted_actual_price': predicted_actual_price,
+        'predicted_avg_rating': predicted_avg_rating,
+        'most_profitable_product': most_profitable_product['name'],
+        'profit_margin': most_profitable_product['profit_margin'],
+        'highest_demand_product': highest_demand_product['name'],
+        'demand_score': highest_demand_product['demand_score'],
+        'most_profitable_products': most_profitable_products.to_dict(orient='records'),
+        'highest_demand_products': highest_demand_products.to_dict(orient='records'),
     })

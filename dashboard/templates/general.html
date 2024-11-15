@@ -16,7 +16,7 @@
     <a href="#" onclick="showSection('section2'); setActiveLink(this)">Categorías</a>
     <a href="#" onclick="showSection('section3'); setActiveLink(this)">Ventas</a>
     <a href="#" onclick="showSection('section4'); setActiveLink(this)">Opiniones</a>
-    <a href="#" onclick="showSection('section5'); setActiveLink(this)">Pronósticos</a>
+    <a href="#" onclick="showSection('section5'); setActiveLink(this)">Inferencias</a>
     <a href="{% url 'logout' %}" class="logout">
         <i class="fas fa-sign-out-alt"></i> Cerrar sesión
     </a>
@@ -224,7 +224,7 @@
         </div>
     </div>
 
-    <!-- Sección 5 - Pronósticos -->
+    <!-- Sección 5 - Inferencias -->
     <div id="section5" class="section">
         <!-- Statboxes-->
         <div class="stats">
@@ -232,11 +232,60 @@
                 <h4>Probabilidad de Devolución</h4>
                 <p>{{ p_devolucion_total|floatformat:2 }}%</p>
             </div>
+            <div class="stat-box">
+                <h4>Pronóstico de Precio con Descuento para 2024</h4>
+                <p>{{ predicted_discount_price|floatformat:2 }} USD</p>
+            </div>
+            <div class="stat-box">
+                <h4>Pronóstico de Precio Actual para 2024</h4>
+                <p>{{ predicted_actual_price|floatformat:2 }} USD</p>
+            </div>
+            <div class="stat-box">
+                <h4>Pronóstico de Calificación Promedio para 2024</h4>
+                <p>{{ predicted_avg_rating|floatformat:2 }}</p>
+            </div>
         </div>
 
+        <!-- Productos Más Rentables para 2024 -->
+        <h2>Productos Más Rentables para 2024</h2>
+        <div class="product-list">
+            {% for product in most_profitable_products %}
+            <div class="product-card">
+                <img src="{{ product.image }}" alt="{{ product.name }}" class="product-image">
+                <div class="product-info">
+                    <h3>{{ product.name }}</h3>
+                    <p><strong>Categoría:</strong> {{ product.main_category }}</p>
+                    <p><strong>Calificación:</strong> {{ product.ratings }} estrellas</p>
+                    <p><strong>Reseñas:</strong> {{ product.no_of_ratings }}</p>
+                    <p><strong>Precio con descuento:</strong> ${{ product.discount_price }}</p>
+                    <p><strong>Precio original:</strong> ${{ product.actual_price }}</p>
+                    <p><a href="{{ product.link }}" target="_blank">Ver producto</a></p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Producto con Mayor Demanda para 2024 -->
+        <h2>Productos con Mayor Demanda para 2024</h2>
+        <div class="product-list">
+            {% for product in highest_demand_products %}
+            <div class="product-card">
+                <img src="{{ product.image }}" alt="{{ product.name }}" class="product-image">
+                <div class="product-info">
+                    <h3>{{ product.name }}</h3>
+                    <p><strong>Categoría:</strong> {{ product.main_category }}</p>
+                    <p><strong>Calificación:</strong> {{ product.ratings }} estrellas</p>
+                    <p><strong>Reseñas:</strong> {{ product.no_of_ratings }}</p>
+                    <p><strong>Precio con descuento:</strong> ${{ product.discount_price }}</p>
+                    <p><strong>Precio original:</strong> ${{ product.actual_price }}</p>
+                    <p><a href="{{ product.link }}" target="_blank">Ver producto</a></p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
 
         <div class="chart-container">
-
+            <!-- Aquí puedes agregar más gráficos si lo deseas -->
         </div>
     </div>
 

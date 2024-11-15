@@ -60,6 +60,9 @@
                 {{ fig_ratings|safe }}
             </div>
             <div class="chart-box">
+                {{ fig_price|safe }}
+            </div>
+            <div class="chart-box">
                 {{ fig_discount_price|safe }}
             </div>
         </div>
@@ -159,6 +162,10 @@
         <!-- Statboxes-->
         <div class="stats">
             <div class="stat-box">
+            <h4>Total de Reseñas</h4>
+            <p>{{ total_reviews }}</p>
+        </div>
+            <div class="stat-box">
                 <h4>Media de Reseñas</h4>
                 <p>{{ avg_reviews|floatformat:2 }}</p>
             </div>
@@ -166,17 +173,17 @@
                 <h4>Mediana de Reseñas</h4>
                 <p>{{ median_reviews }}</p>
             </div>
-            <div class="stat-box">
-                <h4>Índice de Satisfacción del Cliente</h4>
-                <p>{{ satisfaction_index|floatformat:2 }}%</p>
-            </div>
         </div>
 
         <div class="chart-container">
             <div class="chart-box">
                 {{ fig_reviews|safe }}
             </div>
+            <div class="chart-box">
+                {{ fig_satisfaction|safe }}
+            </div>
         </div>
+        
 
         <h2>Mejores Productos (Mejor Calificación / Buenos Descuentos)</h2>
 
@@ -214,6 +221,22 @@
                 </div>
             </div>
             {% endfor %}
+        </div>
+    </div>
+
+    <!-- Sección 5 - Pronósticos -->
+    <div id="section5" class="section">
+        <!-- Statboxes-->
+        <div class="stats">
+            <div class="stat-box">
+                <h4>Probabilidad de Devolución</h4>
+                <p>{{ p_devolucion_total|floatformat:2 }}%</p>
+            </div>
+        </div>
+
+
+        <div class="chart-container">
+
         </div>
     </div>
 

@@ -6,7 +6,8 @@ from .utils import import_and_clean_data
 from django.http import JsonResponse
 from main.views import get_user_roles
 import requests
-import numpy as np  # Asegúrate de importar numpy para calcular la mediana
+import numpy as np
+import plotly.graph_objects as go
 
 # Función para verificar si la URL de la imagen es válida
 def is_image_valid(url):
@@ -35,6 +36,7 @@ def general_dashboard(request):
     # Crear gráficos
     fig_category = px.bar(category_counts, x='Category', y='Count', title='Cantidad de Productos por Categoria')
     fig_ratings = px.histogram(df_clean, x='ratings', nbins=20, title='Distribución de Calificaciones')
+    fig_price = px.histogram(df_clean, x='actual_price', nbins=20, title='Distribución de Precios')
     fig_discount_price = px.histogram(df_clean, x='discount_price', nbins=20, title='Distribución de Precios con Descuento')
     fig_reviews = px.histogram(df_clean, x='no_of_ratings', nbins=20, title='Distribución del Número de Reseñas')
 
@@ -129,6 +131,8 @@ def general_dashboard(request):
     products_with_active_discount = df_clean[df_clean['discount_price'] < df_clean['actual_price']]
     discount_percentage = round((len(products_with_active_discount) / total_products) * 100, 2)
 
+    total_reviews = df_clean['no_of_ratings'].sum()
+
     # Ajustar todos los gráficos
     def adjust_figure(fig):
         fig.update_layout(
@@ -142,6 +146,7 @@ def general_dashboard(request):
 
     fig_category = adjust_figure(fig_category)
     fig_ratings = adjust_figure(fig_ratings)
+    fig_price = adjust_figure(fig_price)
     fig_discount_price = adjust_figure(fig_discount_price)
     fig_reviews = adjust_figure(fig_reviews)
     fig_category_top_reviews = adjust_figure(fig_category_top_reviews)
@@ -161,12 +166,42 @@ def general_dashboard(request):
 
     satisfaction_index = df_clean['ratings'].mean() * 20
 
+    fig_satisfaction = go.Figure(go.Indicator(
+        mode="number+gauge",
+        value=satisfaction_index,
+        gauge={
+            'axis': {'range': [0, 100]},
+            'bar': {'color': "green"},
+            'bgcolor': "lightgray",  # Color de fondo para la barra
+            'borderwidth': 2,         # Grosor del borde
+            'bordercolor': "black"     # Color del borde
+        },
+        title={'text': "Índice de Satisfacción del Cliente (%)"}
+    ))
+
+    fig_satisfaction.update_layout(
+        margin=dict(l=10, r=10, t=150, b=10),
+        autosize=True,
+        height=350,
+        width=500,
+        title_x=0.5,
+    )
+
+    p_compra = 0.7        # 70% de probabilidad de compra
+    p_insatisfaccion = 0.25 # 25% de probabilidad de insatisfacción
+    p_devolucion = 0.8    # 80% de probabilidad de devolución si está insatisfecho
+
+    # Calcular la probabilidad de devolución
+    p_devolucion_total = p_compra * p_insatisfaccion * p_devolucion * 100  # Multiplicamos por 100 para expresarlo en porcentaje
+
+
     # Pasar los cálculos y gráficos a la plantilla
     return render(request, 'general.html', {
         'total_products': total_products,
         'category_counts': category_counts.to_dict(orient='records'),
         'fig_category': fig_category.to_html(full_html=False),
         'fig_ratings': fig_ratings.to_html(full_html=False),
+        'fig_price': fig_price.to_html(full_html=False),
         'fig_discount_price': fig_discount_price.to_html(full_html=False),
         'fig_reviews': fig_reviews.to_html(full_html=False),
         'fig_category_top_reviews': fig_category_top_reviews.to_html(full_html=False),
@@ -192,6 +227,9 @@ def general_dashboard(request):
         'username': username,
         'role': role,
         'picture': picture,
-        'satisfaction_index': satisfaction_index,
-        'discount_percentage': discount_percentage, 
+        #satisfaction_index': satisfaction_index,
+        'fig_satisfaction': fig_satisfaction.to_html(full_html=False),
+        'discount_percentage': discount_percentage,
+        'total_reviews': total_reviews,
+        'p_devolucion_total': p_devolucion_total,
     })

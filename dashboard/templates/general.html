@@ -10,13 +10,18 @@
 </head>
 <body>
 
+<!-- Botón Regresar -->
+<a href="http://localhost:8000" class="fixed-button">Volver a Inicio</a>
+
 <!-- Barra lateral -->
 <div class="sidebar">
     <a href="#" onclick="showSection('section1'); setActiveLink(this)">General</a>
-    <a href="#" onclick="showSection('section2'); setActiveLink(this)">Categorías</a>
-    <a href="#" onclick="showSection('section3'); setActiveLink(this)">Ventas</a>
-    <a href="#" onclick="showSection('section4'); setActiveLink(this)">Opiniones</a>
-    <a href="#" onclick="showSection('section5'); setActiveLink(this)">Inferencias</a>
+    {% if role == 'User' or role == 'Admin' %}
+        <a href="#" onclick="showSection('section2'); setActiveLink(this)">Categorías</a>
+        <a href="#" onclick="showSection('section3'); setActiveLink(this)">Ventas</a>
+        <a href="#" onclick="showSection('section4'); setActiveLink(this)">Opiniones</a>
+        <a href="#" onclick="showSection('section5'); setActiveLink(this)">Inferencias</a>
+    {% endif %}
     <a href="{% url 'logout' %}" class="logout">
         <i class="fas fa-sign-out-alt"></i> Cerrar sesión
     </a>
@@ -27,6 +32,9 @@
     <div class="header">
         <h1>Amazon Sales Dashboard</h1>
         <div class="user-info">
+            {% if role == "Admin" %}
+                <a href="https://manage.auth0.com/dashboard/us/dev-662mo32wvjkg8glb/roles" target="_blank" class="admin-panel">Admin Panel</a>
+            {% endif %}
             <div>
                 <h3>{{ username }}</h3>
                 <p>{{ role }}</p>

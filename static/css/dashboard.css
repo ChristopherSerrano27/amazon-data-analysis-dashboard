@@ -1,3 +1,23 @@
+/* Estilo del botón fijo */
+.fixed-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #007bff; /* Color azul */
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000; /* Asegura que esté sobre otros elementos */
+}
+
+.fixed-button:hover {
+    background-color: #0056b3; /* Color azul más oscuro */
+}
+
 /* Estilos generales */
 body {
     font-family: Arial, sans-serif;
@@ -66,18 +86,22 @@ body {
 
 .user-info {
     display: flex;
-    align-items: center;
+    align-items: center;      /* Alineación vertical centrada */
 }
 
-.user-info img {
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    margin-left: 20px;
+.admin-panel {
+    text-decoration: none;
+    color: #007bff;
+    margin-right: 20px;       /* Espaciado entre el enlace y el nombre */
+    display: inline-block;     /* Se asegura de que el enlace se comporte como un bloque de línea */
+}
+
+.admin-panel:hover {
+    text-decoration: underline;
 }
 
 .user-info div {
-    text-align: right;
+    text-align: left;         /* Alinea el nombre y el rol a la izquierda */
 }
 
 .user-info h3 {
@@ -89,6 +113,13 @@ body {
 .user-info p {
     margin: 0;
     color: #666;
+}
+
+.user-info img {
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    margin-left: 20px;        /* Espaciado entre el nombre y la imagen */
 }
 
 .stats {

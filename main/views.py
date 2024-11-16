@@ -145,5 +145,3 @@ def get_user_roles(user_id):
         return []
 
 
-
-

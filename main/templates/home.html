@@ -44,34 +44,40 @@
             color: #555;
         }
 
-        /* Estilos del botón */
+        /* Contenedor de botones */
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        /* Estilos generales de los botones */
         .btn {
+            flex: 1;
             background-color: #2a9d8f;
             color: white;
-            padding: 12px 30px;
+            padding: 12px 20px;
             border: none;
             border-radius: 5px;
             font-size: 1.1em;
             cursor: pointer;
             transition: background-color 0.3s ease;
             text-decoration: none;
+            text-align: center;
         }
 
         .btn:hover {
             background-color: #21867a;
         }
 
-        /* Estilo para el enlace de cierre de sesión */
-        .logout {
-            margin-top: 20px;
-            display: inline-block;
-            color: #2a9d8f;
-            font-size: 1em;
-            text-decoration: none;
+        /* Estilo del botón de cerrar sesión */
+        .logout-btn {
+            background-color: #e63946;
         }
 
-        .logout:hover {
-            text-decoration: underline;
+        .logout-btn:hover {
+            background-color: #d62839;
         }
 
         /* Estilo para imagen de perfil */
@@ -89,16 +95,26 @@
     <div class="welcome-container">
         <h1>Bienvenido al Dashboard de Análisis de Datos de Amazon</h1>
         <p class="description">
-            Este proyecto te proporciona herramientas poderosas para analizar los datos de productos, categorías, precios y más dentro del ecosistema de Amazon.
-            ¡Explora las visualizaciones y descubre patrones útiles para tomar decisiones informadas!
+            Este proyecto es una plataforma interactiva diseñada para analizar y visualizar datos de productos en Amazon. 
+            Aquí puedes explorar información detallada sobre los productos más rentables, los de mayor demanda y aquellos con menor rendimiento.
+            Nuestro objetivo es ofrecerte herramientas prácticas que faciliten la toma de decisiones basada en datos precisos y procesados en tiempo real.
+        </p>
+        <p class="description">
+            Con este dashboard, puedes identificar patrones de compra, tendencias de mercado, y oportunidades de optimización 
+            para tus estrategias de ventas o investigaciones.
         </p>
 
         {% if user %}
             <p>¡Hola, {{ user.name }}!</p>
             <img src="{{ user.picture }}" alt="Foto de Perfil" class="profile-img">
             <p>{{ role_message }}</p>
-            <a href="{% url 'logout' %}" class="logout">Cerrar sesión</a>
-            <a href="{% url 'general_dashboard' %}" class="btn">Ir al Dashboard</a>
+            <div class="button-container">
+                <a href="{% url 'general_dashboard' %}" class="btn">Ir al Dashboard</a>
+                <form action="{% url 'logout' %}" method="post" style="margin: 0;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn logout-btn">Cerrar sesión</button>
+                </form>
+            </div>
         {% else %}
             <p>No has iniciado sesión.</p>
             <a href="{% url 'login' %}" class="btn">Iniciar sesión</a>

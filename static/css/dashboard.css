@@ -22,7 +22,7 @@
 body {
     font-family: Arial, sans-serif;
     margin: 0;
-    background-color: #f4f4f9;
+    background: linear-gradient(180deg, #402389, #12023c);
     display: flex;
     flex-wrap: wrap;
 }
@@ -37,8 +37,8 @@ body {
 
 /* Estilos para la barra lateral */
 .sidebar {
-    width: 15%;
-    background-color: #333;
+    width: 12%;
+    background: linear-gradient(180deg, #d20fd5, #a005f3); /* Degradado solicitado */
     height: 100vh;
     position: fixed;
     top: 0;
@@ -59,17 +59,20 @@ body {
 }
 
 .sidebar a:hover {
-    background-color: #575757;
+    background-color: #b10fcf; /* Tono intermedio entre los colores del degradado */
 }
 
 .sidebar a.active {
-    background-color: #555;
+    background-color: #8d0bb3; /* Color más oscuro para indicar elemento activo */
 }
 
 .sidebar a.logout {
     margin-top: 600px;
-    background-color: #ff4d4d;
+    background-color: #ab05f3;
     text-align: center;
+}
+.sidebar a.logout:hover {
+    background-color: #c44bcf; /* Combina mejor con el degradado */
 }
 
 /* Estilo para la barra de encabezado */
@@ -78,7 +81,8 @@ body {
     align-items: center;
     justify-content: space-between;
     margin-bottom: 10px;
-    background-color: #fff;
+    font-style: Officina Sans Bold;
+    background-color: #ad77ee;
     padding: 15px 20px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -91,7 +95,7 @@ body {
 
 .admin-panel {
     text-decoration: none;
-    color: #007bff;
+    color: #fceaf4;
     margin-right: 20px;       /* Espaciado entre el enlace y el nombre */
     display: inline-block;     /* Se asegura de que el enlace se comporte como un bloque de línea */
 }
@@ -129,7 +133,7 @@ body {
 }
 
 .stat-box {
-    background-color: #fff;
+    background-color: #aa3bf2;
     padding: 15px;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -155,7 +159,7 @@ body {
     height: 0;
     padding-bottom: 31%;
     position: relative;
-    background-color: #fff;
+    background-color: #B29CD9;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     overflow: hidden;
@@ -165,6 +169,7 @@ body {
 .chart-box iframe, 
 .chart-box .chart-content {
     position: absolute;
+    background-color: #d8bfd8;
     top: 0;
     left: 0;
     width: 100%;
@@ -216,7 +221,7 @@ body {
 }
 
 .product-card {
-    background-color: #fff;
+    background: linear-gradient(135deg, #e0b3e6, #ba55d3, #dda0dd);
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     width: 30%;
@@ -241,12 +246,12 @@ body {
 
 .product-info h3 {
     font-size: 1.2em;
-    color: #333;
+    color: #fdfdfd;
 }
 
 .product-info p {
     font-size: 1em;
-    color: #555;
+    color: #f2f1f8;
 }
 
 @media (max-width: 768px) {

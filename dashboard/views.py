@@ -138,25 +138,25 @@ def general_dashboard(request):
     # Ajustar todos los gráficos
     def adjust_figure(fig):
         fig.update_traces(
-    marker=dict(
-        color='rgb(173, 119, 238)'  # Color morado para las barras
-    )
-)
+            marker=dict(
+                color='rgb(173, 119, 238)'  # Color morado para las barras
+            )
+        )
         fig.update_layout(
-    margin=dict(l=10, r=10, t=150, b=10),
-    autosize=True, 
-    plot_bgcolor='rgb(106, 7, 187)',  # Fondo azul oscuro donde se dibujan las barras
-    paper_bgcolor='rgb(178, 156, 217)',  # Morado pastel claro para el fondo fuera de la zona de trazado
-    barmode='group',  # Agrupar las barras si es necesario
-    colorway=['rgb(139, 55, 252)'],  # Color fucsia para las barras
-    height=400, 
-    width=520,
-    title_x=0.5,  
-    font=dict(
-        family='Arial, sans-serif',  # Tipo de fuente
-        size=18,  # Tamaño de la fuente
-        color='rgb(255, 255, 255)'  # Color de la fuente (blanco)
-    ) 
+            margin=dict(l=10, r=10, t=150, b=10),
+            autosize=True,
+            plot_bgcolor='rgb(106, 7, 187)',  # Fondo azul oscuro donde se dibujan las barras
+            paper_bgcolor='rgb(178, 156, 217)',  # Morado pastel claro para el fondo fuera de la zona de trazado
+            barmode='group',  # Agrupar las barras si es necesario
+            colorway=['rgb(139, 55, 252)'],  # Color fucsia para las barras
+            height=430,
+            width=500,
+            title_x=0.5,
+            font=dict(
+                family='Arial, sans-serif',  # Tipo de fuente
+                size=14,  # Tamaño de la fuente
+                color='rgb(255, 255, 255)'  # Color de la fuente (blanco)
+            )
         )
         return fig
 
